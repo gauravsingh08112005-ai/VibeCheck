@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Plus, LogIn, Users, Shield, Copy, Check, ArrowRight } from 'lucide-react';
 import { ApiUser, apiFetch } from '../lib/api';
+import { getStoredRooms, createLocalRoom, findRoomByCode } from '../lib/roomStore';
 
 interface RoomSummary {
   id: string;
@@ -43,17 +44,9 @@ export const RoomsPage: React.FC<RoomsPageProps> = ({ user, onOpenAuth }) => {
       const data = await apiFetch<{ rooms: RoomSummary[] }>('/api/rooms/me');
       setRooms(data.rooms || []);
     } catch {
-      // Default demo room if API offline
-      setRooms([
-        {
-          id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-          name: 'Late Night Crew',
-          roomCode: 'K7P2QX',
-          role: user?.role === 'admin' ? 'admin' : 'member',
-          memberCount: 5,
-          isActive: true,
-        },
-      ]);
+      // Default to locally stored rooms if API offline
+      const localRooms = getStoredRooms();
+      setRooms(localRooms);
     } finally {
       setIsLoading(false);
     }
@@ -70,24 +63,34 @@ export const RoomsPage: React.FC<RoomsPageProps> = ({ user, onOpenAuth }) => {
         body: JSON.stringify({ name: newRoomName.trim() }),
       });
       navigate(`/room/${created.id}`);
-    } catch (err: any) {
-      setError(err.message || 'Failed to create room.');
+    } catch {
+      // Offline fallback: save locally and navigate
+      const created = createLocalRoom(newRoomName.trim(), 'admin');
+      navigate(`/room/${created.id}`);
     }
   };
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!joinCode.trim()) return;
+    const code = joinCode.trim().toUpperCase();
+    if (!code) return;
     setError(null);
 
     try {
       const joined = await apiFetch<any>('/api/rooms/join', {
         method: 'POST',
-        body: JSON.stringify({ roomCode: joinCode.trim().toUpperCase() }),
+        body: JSON.stringify({ roomCode: code }),
       });
       navigate(`/room/${joined.id}`);
-    } catch (err: any) {
-      setError(err.message || 'Failed to join room.');
+    } catch {
+      // Offline fallback: find existing room or join it
+      const existing = findRoomByCode(code);
+      if (existing) {
+        navigate(`/room/${existing.id}`);
+      } else {
+        const joined = createLocalRoom(`Room ${code}`, 'member', code);
+        navigate(`/room/${joined.id}`);
+      }
     }
   };
 

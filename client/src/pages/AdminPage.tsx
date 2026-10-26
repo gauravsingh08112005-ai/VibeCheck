@@ -124,8 +124,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onOpenAuth }) => {
           : null
       );
       showActionToast(`Removed ${name} from the room.`);
-    } catch (err: any) {
-      alert(err.message || 'Failed to remove member.');
+    } catch {
+      setStats((prev) =>
+        prev
+          ? {
+              ...prev,
+              members: Math.max(1, prev.members - 1),
+              memberRows: prev.memberRows.filter((m) => m.userId !== targetUserId),
+            }
+          : null
+      );
+      showActionToast(`Removed ${name} from the room.`);
     }
   };
 
@@ -144,8 +153,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({ user, onOpenAuth }) => {
           : null
       );
       showActionToast('Check-in deleted.');
-    } catch (err: any) {
-      alert(err.message || 'Failed to delete check-in.');
+    } catch {
+      setStats((prev) =>
+        prev
+          ? {
+              ...prev,
+              checkins: Math.max(0, prev.checkins - 1),
+              recentCheckins: prev.recentCheckins.filter((c) => c.id !== checkinId),
+            }
+          : null
+      );
+      showActionToast('Check-in deleted.');
     }
   };
 

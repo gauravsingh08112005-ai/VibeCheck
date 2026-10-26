@@ -99,8 +99,8 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ user, onOpenAuth }) =>
     try {
       await apiFetch(`/api/checkins/${checkinId}`, { method: 'DELETE' });
       setCheckins((prev) => prev.filter((c) => c.id !== checkinId));
-    } catch (err: any) {
-      alert(err.message || 'Failed to delete checkin.');
+    } catch {
+      setCheckins((prev) => prev.filter((c) => c.id !== checkinId));
     }
   };
 

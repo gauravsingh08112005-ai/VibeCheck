@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ApiUser, apiFetch } from '../lib/api';
+import { findRoomById } from '../lib/roomStore';
 import { VibeMeter } from '../components/VibeMeter';
 import { CheckInForm } from '../components/CheckInForm';
 import { MoodMixChart } from '../components/MoodMixChart';
@@ -89,15 +90,16 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ user, onOpenAuth }
       setSongs(playlistData.songs || []);
       setTotalSongs(playlistData.total || 0);
     } catch {
-      // Default to demo room data if running offline
+      // Default to demo or locally created room data if running offline
+      const customRoom = roomId ? findRoomById(roomId) : null;
       const demoRoom: RoomDetails = {
         id: roomId || 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-        name: 'Late Night Crew',
-        roomCode: 'K7P2QX',
-        isActive: true,
-        currentUserRole: user?.role === 'admin' ? 'admin' : 'member',
+        name: customRoom?.name || 'Late Night Crew',
+        roomCode: customRoom?.roomCode || 'K7P2QX',
+        isActive: customRoom ? customRoom.isActive : true,
+        currentUserRole: customRoom?.role || (user?.role === 'admin' ? 'admin' : 'member'),
         members: [
-          { userId: '11111111-1111-1111-1111-111111111111', displayName: 'Gaurav Singh', role: 'admin', joinedAt: '2026-10-20', avatarColor: '#C6FF3D' },
+          { userId: '11111111-1111-1111-1111-111111111111', displayName: user?.displayName || 'Gaurav Singh', role: customRoom?.role || 'admin', joinedAt: '2026-10-20', avatarColor: user?.avatarColor || '#C6FF3D' },
           { userId: '22222222-2222-2222-2222-222222222222', displayName: 'Rahul', role: 'member', joinedAt: '2026-10-20', avatarColor: '#22D3EE' },
           { userId: '33333333-3333-3333-3333-333333333333', displayName: 'Aman', role: 'member', joinedAt: '2026-10-21', avatarColor: '#FF4D8D' },
           { userId: '44444444-4444-4444-4444-444444444444', displayName: 'Rohit', role: 'member', joinedAt: '2026-10-21', avatarColor: '#FFB020' },
