@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: vibecheck-rooms-api
+    runtime: node
+    buildCommand: npm install && npm run build --workspace=server
+    startCommand: npm start --workspace=server
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 20
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        value: "*"

@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #0B0B10;
+  --color-surface: #15151D;
+  --color-surface-2: #1E1E29;
+  --color-border: #2A2A38;
+  --color-text: #F5F5FA;
+  --color-text-muted: #A1A1B5;
+  --color-lime: #C6FF3D;
+  --color-violet: #8B5CF6;
+  --color-pink: #FF4D8D;
+  --color-cyan: #22D3EE;
+  --color-amber: #FFB020;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .font-heading {
+  font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0B0B10;
+}
+::-webkit-scrollbar-thumb {
+  background: #2A2A38;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3B3B4F;
+}
