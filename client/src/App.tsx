@@ -66,7 +66,21 @@ export const App: React.FC = () => {
             }
           />
           <Route
+            path="/VibeCheck"
+            element={
+              <LandingPage
+                user={user}
+                onOpenAuth={() => setIsAuthOpen(true)}
+                onOpenExplainer={() => setIsExplainerOpen(true)}
+              />
+            }
+          />
+          <Route
             path="/rooms"
+            element={<RoomsPage user={user} onOpenAuth={() => setIsAuthOpen(true)} />}
+          />
+          <Route
+            path="/VibeCheck/rooms"
             element={<RoomsPage user={user} onOpenAuth={() => setIsAuthOpen(true)} />}
           />
           <Route
@@ -74,7 +88,15 @@ export const App: React.FC = () => {
             element={<DashboardPage user={user} onOpenAuth={() => setIsAuthOpen(true)} />}
           />
           <Route
+            path="/VibeCheck/room/:id"
+            element={<DashboardPage user={user} onOpenAuth={() => setIsAuthOpen(true)} />}
+          />
+          <Route
             path="/room/:id/admin"
+            element={<AdminPage user={user} onOpenAuth={() => setIsAuthOpen(true)} />}
+          />
+          <Route
+            path="/VibeCheck/room/:id/admin"
             element={<AdminPage user={user} onOpenAuth={() => setIsAuthOpen(true)} />}
           />
           <Route
@@ -82,12 +104,17 @@ export const App: React.FC = () => {
             element={<HistoryPage user={user} onOpenAuth={() => setIsAuthOpen(true)} />}
           />
           <Route
+            path="/VibeCheck/room/:id/history"
+            element={<HistoryPage user={user} onOpenAuth={() => setIsAuthOpen(true)} />}
+          />
+          <Route
             path="*"
             element={
-              <div className="text-center py-24 space-y-4">
-                <h1 className="font-heading font-extrabold text-4xl text-pink">404</h1>
-                <p className="text-xs text-text-muted">The page you were looking for doesn't exist.</p>
-              </div>
+              <LandingPage
+                user={user}
+                onOpenAuth={() => setIsAuthOpen(true)}
+                onOpenExplainer={() => setIsExplainerOpen(true)}
+              />
             }
           />
         </Routes>
